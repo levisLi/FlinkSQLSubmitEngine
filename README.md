@@ -14,7 +14,7 @@
 ```shell
 1. 项目打包SQL-Template-1.0-SNAPSHOT.jar上传到flink的lib目录下
 2. 写一个test.sql放到一个目录下
-3. 运行 bin/flink run -m yarn-cluster ./lib/SQL-Template-1.0-SNAPSHOT.jar -w ./ -f test.sql
+3. 运行 bin/flink run -m yarn-cluster ./lib/flinkSQL-submit-engine-1.0.0.jar -w ./ -f test.sql
 4. 启动kafka消费者 bin/kafka-console-consumer --bootstrap-server 10.1.30.8:9092 --topic test_sink
 5. 启动kafka生产者 bin/kafka-console-producer --broker-list 10.1.30.8:9092 --topic test_source
 6. 发送一条数据 {"id":"001","name":"zhangsan"}可以在kafka消费者端看到相同的数据

@@ -1,4 +1,6 @@
 package org.example;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.SqlParserException;
@@ -8,7 +10,7 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.example.config.CliOptions;
 import org.example.config.CliOptionsParser;
 import org.example.config.SqlCommandParser;
-
+import org.apache.paimon.hive.PaimonStorageHandler;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -29,7 +31,14 @@ public class FlinkSQLSubmitEngine {
 
     public static void main(String[] args) throws Exception {
         final CliOptions options = CliOptionsParser.parseClient(args);
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        StreamExecutionEnvironment env=null;
+        if(options.getDeployMode().equals("local")){
+            Configuration flinkConfig = new Configuration();
+            flinkConfig.setInteger(RestOptions.PORT.key(), 8081);
+            env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(flinkConfig);
+        }else {
+            env = StreamExecutionEnvironment.getExecutionEnvironment();
+        }
         EnvironmentSettings settings = EnvironmentSettings.newInstance()
                 .inStreamingMode()
                 .build();
@@ -67,7 +76,7 @@ public class FlinkSQLSubmitEngine {
             case SET:
                 callSet(cmdCall);
                 break;
-            case CREATE_TABLE:
+            case CREATE_TABLE: case CREATE_CATALOG: case USE_CATALOG:
                 callCreateTable(cmdCall);
                 break;
             case INSERT_INTO:
@@ -114,6 +123,7 @@ public class FlinkSQLSubmitEngine {
         String key = cmdCall.operands[0];
         String value = cmdCall.operands[1];
         tEnv.getConfig().getConfiguration().setString(key, value);
+        System.out.println("添加环境变量: "+ key + " -> "+value);
     }
 
     private void callCreateTable(SqlCommandParser.SqlCommandCall cmdCall) {

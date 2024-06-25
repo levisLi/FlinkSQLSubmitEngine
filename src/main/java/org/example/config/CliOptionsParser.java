@@ -25,13 +25,13 @@ public class CliOptionsParser {
             .desc("The SQL file path.")
             .build();
 
-    public static final Option OPTION_HIVE_CONF = Option
-            .builder("hc")
-            .required(true)
-            .longOpt("hive_conf")
+    public static final Option OPTION_MODE_FILE = Option
+            .builder("e")
+            .required(false)
+            .longOpt("file")
             .numberOfArgs(1)
-            .argName("Hive config file path")
-            .desc("The Hive config path.")
+            .argName("deploy-mode")
+            .desc("deploy-mode.")
             .build();
 
     public static final Options CLIENT_OPTIONS = getClientOptions(new Options());
@@ -39,7 +39,7 @@ public class CliOptionsParser {
     public static Options getClientOptions(Options options) {
         options.addOption(OPTION_SQL_FILE);
         options.addOption(OPTION_WORKING_SPACE);
-//        options.addOption(OPTION_HIVE_CONF);
+        options.addOption(OPTION_MODE_FILE);
         return options;
     }
 
@@ -57,8 +57,8 @@ public class CliOptionsParser {
             CommandLine line = parser.parse(CLIENT_OPTIONS, args, true);
             return new CliOptions(
                     line.getOptionValue(CliOptionsParser.OPTION_SQL_FILE.getOpt()),
-                    line.getOptionValue(CliOptionsParser.OPTION_WORKING_SPACE.getOpt())
-                    //line.getOptionValue(CliOptionsParser.OPTION_HIVE_CONF.getOpt())
+                    line.getOptionValue(CliOptionsParser.OPTION_WORKING_SPACE.getOpt()),
+                    line.getOptionValue(CliOptionsParser.OPTION_MODE_FILE.getOpt())
             );
         }
         catch (ParseException e) {

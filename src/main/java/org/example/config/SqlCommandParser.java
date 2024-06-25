@@ -81,6 +81,12 @@ public class SqlCommandParser {
         CREATE_TABLE(
                 "(CREATE\\s+TABLE.*)",
                 SINGLE_OPERAND),
+        CREATE_CATALOG(
+                "(CREATE\\s+CATALOG.*)",
+                SINGLE_OPERAND),
+        USE_CATALOG(
+                "(USE\\s+CATALOG.*)",
+                SINGLE_OPERAND),
         CREATE_FUNCTION("(CREATE\\s+FUNCTION.*)", SINGLE_OPERAND),
         DROP_FUNCTION("(DROP\\s+FUNCTION.*)", SINGLE_OPERAND),
         CREATE_VIEW("(CREATE\\s+VIEW.*)", SINGLE_OPERAND),
